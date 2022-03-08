@@ -1,5 +1,7 @@
 package com.example.demoMysqltutorial.model;
 import java.util.Date;
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
@@ -22,7 +24,7 @@ public class Books {
 	private String description;
 	
 	@Column(name="price")
-	private String price;
+	private double price;
 	
 	@Column(name="purchase_status")
 	private String purchase_status;
@@ -56,7 +58,7 @@ public class Books {
 		super();
 	}
 	
-	public Books(long id, String title, String description, String price,String purchase_status, String created_by, Date created_date, long category, String purchasereference
+	public Books(long id, String title, String description, double price,String purchase_status, String created_by, Date created_date, long category, String purchasereference
 			, Date updated, String responseCode, String responseDescription, String debitReference) {
 		super();
 		this.id = id;
@@ -95,10 +97,10 @@ public class Books {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getPrice() {
+	public double getPrice() {
 		return price;
 	}
-	public void setPrice(String price) {
+	public void setPrice(double price) {
 		this.price = price;
 	}
 	
@@ -135,11 +137,7 @@ public class Books {
 	public void setPurchasereference(String purchasereference) {
 		this.purchasereference = purchasereference;
 	}
-	//////
-
-
-
-		
+	
 	public Date getUpdated() {
 		return updated;
 	}
@@ -164,6 +162,7 @@ public class Books {
 	public void setDebitReference(String debitReference) {
 		this.debitReference = debitReference;
 	}
+
 	
 	
 

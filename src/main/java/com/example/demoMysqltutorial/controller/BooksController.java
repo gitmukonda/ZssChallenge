@@ -2,6 +2,7 @@ package com.example.demoMysqltutorial.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -70,8 +71,21 @@ public class BooksController {
 		return books;
 		}
 		
+		//Get Book by title
+		@PostMapping("/Books_Search_By_Title")
+		public List<Books> getBookBytitle(@RequestBody Books bookstitleDetails){
+		List<Books> books = booksRepository.findBytitleContaining(bookstitleDetails.getTitle());
+		return books;
+		}
 		
+		//Get Book by Description
+		@PostMapping("/Books_Search_By_Description")
+		public List<Books> getBookByDescription(@RequestBody Books bookstitleDetails){
+		List<Books> books = booksRepository.findBydescriptionContaining(bookstitleDetails.getDescription());
+		return books;
+		}
 		
+			
 		@PutMapping("/Purchase_Book_Step01/{id}")
 		public ResponseEntity<Books> updateBooks(
 		@PathVariable(value = "id") Long bookId,
@@ -80,9 +94,9 @@ public class BooksController {
 		Books books = booksRepository.findById(bookId)
 		.orElseThrow(() -> new ResourceNotFoundException("User not found :: " + bookId, null, bookId));
 			
-		
-		books.setPurchase_status(booksUpdateDetails.getPurchase_status());
-		books.setPurchasereference(booksUpdateDetails.getPurchasereference());
+		UUID uuid = UUID.randomUUID();
+		books.setPurchase_status("Pending Payment");
+		books.setPurchasereference(uuid.toString());
 	
 		
 			

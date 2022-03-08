@@ -78,15 +78,12 @@ public class RestApiController {
 	public ResponseEntity<ResponseEntity<PurchaseResponse>> postPurchase(@RequestBody Purchase purchase, @RequestHeader(value="Accept") String AcceptHeader,
 	@RequestHeader(value="Authorization") String AuthorizationHeader) throws JsonMappingException, JsonProcessingException{
 		
-//	ObjectMapper om = new ObjectMapper();
-//	Purchase  root2 = om.readValue(purchase, Purchase.class); 
-		
 
 	ResponseEntity<PurchaseResponse> resp = restTemplate.postForEntity(post_purchase_url,purchase, PurchaseResponse.class);
 	return ResponseEntity.ok(resp);
 	}
 	
-    @PostMapping(path = "/myrequestheaders", produces = {MediaType.APPLICATION_JSON_VALUE} )
+    @PostMapping(path = "/PurchaseBook", produces = {MediaType.APPLICATION_JSON_VALUE} )
     public Books getMyResponse(@RequestBody Root root,
             @RequestHeader(value="Accept") String acceptHeader,
             @RequestHeader(value="Authorization") String authorizationHeader
@@ -96,6 +93,7 @@ public class RestApiController {
         returnValue.put("Accept", acceptHeader);
         returnValue.put("Authorization", authorizationHeader);
         
+        // Add Headers 
     	HttpHeaders headers = new HttpHeaders();
 		headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.add("Authorization", "9ca3d5ed-dc04-4700-8dd6-7d60c3cdf0fa");
@@ -109,12 +107,14 @@ public class RestApiController {
      	
      // Send request with POST method.
      ResponseEntity<PurchaseResponse> result 
-     	= restTemplate.postForEntity(post_purchase_url, requestBody, PurchaseResponse.class);
+     = restTemplate.postForEntity(post_purchase_url, requestBody, PurchaseResponse.class);
         
-    //Saving the Purchase Response into Database
-    PurchaseResponse purResponse = result.getBody();
-    purchaseResponseRepository.save(purResponse);
-    String pRef = purResponse.getReference();
+     //Saving the Purchase Response into Database
+     PurchaseResponse purResponse = result.getBody();
+     purchaseResponseRepository.save(purResponse);
+     String pRef = purResponse.getReference();
+     
+     // Getting book with reference used to pay
    
     Books bk = booksRepository.findBypurchasereference(pRef);
     bk.setPurchase_status(purResponse.getResponseCode());
@@ -122,8 +122,10 @@ public class RestApiController {
     bk.setResponseCode(purResponse.getResponseCode());
     bk.setResponseDescription(purResponse.getResponseDescription());
     bk.setDebitReference(purResponse.getDebitReference());
-  // Look Up for the Book that has Received a Purchase Transaction
+    // Look Up for the Book that has Received a Purchase Transaction
     
+    
+    //Update Book record with API response
     booksRepository.save(bk);
      
      return bk;
